@@ -1,10 +1,254 @@
 %%%%%%%%%%%%%%%%%%% Section 8 %%%%%%%%%%%%%%%%%%%%%%%
 \vspace{-1ex}
-\section{Pre}
+\section{Attribute-driven Backbones}
 \label{sec-pre}
 
+\subsection{Graphs and Attributed Backbones}
+
+\stitle{Graphs}. We consider an \eat{a directed}
+attributed graph
+$G$ = $(V,E,F_A)$ with a finite set of
+nodes $V$, and
+a finite set of edges $E\subseteq V\times V$.
+Each node $v\in V$ has a
+{\em node tuple} $F_A(v)$ =
+$\{(A_1, a_1), \ldots, (A_n,a_n)\}$
+defined on a set of node attributes $\A$,
+where a pair $(A_i, a_i)\in F_A(v)$
+states that the attribute $v.A_i\in\A$ has
+a value $a_i\in\adom(A_i)$. Here
+(a) $\A$ refers to a set of all the node
+attributes seen in $G$; and (b)
+$\adom(A_i)$ is a finite {\em active domain} of
+attribute $A_i$ in $G$, and contains
+all the values of $v.A_i$, where $v$ ranges
+over all the nodes in $V$.
+
+
+We do not assume that all the nodes in $G$
+have the same set of attributes. Specifically,
+ we denote the set of all the attributes in $F_A(v)$
+as $\A(v)$ ($\A(v)\subseteq\A$).
+
+
+\stitle{Attribute-driven Backbone}.
+Given a graph $G$ = $(V,E,F_A)$, an
+attribute-driven backbone $T$
+is a tree $(V_T,E_T,F_T)$, where
+\vspace{-.75ex}
+\bi
+\item $E_T\subseteq E$, and $V_T\subseteq V$ are the nodes that are the end nodes of
+the edges in $E_T$, \ie $T$ is an edge-induced subtree of $G$;
+\item Each edge $e$=$(v,v')\in E_T$
+has a set of {\em affinitive} attributes
+$F_T(e)\subseteq\A(v)\cap\A(v')$.
+\ei
+
+Intuitively, affinity attributes $F_T(e)$
+for an edge $e$ indicates possible
+common attributes of its two end nodes
+that can determine the strength of
+$e$. A common example is that friendship
+is more likely to be formed between two
+social network users who share common interests
+(\eg 'hobby', 'activity', 'fan').
+
+\vspace{.5ex}
+In the following sections, we shall refer to
+attribute-driven backbones as ``backbones''
+for simplicity.
+
+\begin{example}
+Two backbones $T_1$ and
+$T_2$ are
+illustrated in Fig.~\ref{exa-motivate}.
+For edge $(v_5,v_6)$ in $T_1$,
+$F_{T_1}((v_5, v_6))$ = $\{\texttt{location}\}$,
+stating that $v_5$ and $v_6$ are geographically close to each other
+in $T_1$. Other possible affinitive
+attributes for $((v_5,v_6))$
+can be $\{\texttt{tour\_type}\}$ or
+ $\{\texttt{tour\_type}, \texttt{location}\}$.
+Similarly, the affinitive attributes
+for edge $(v_1, v_8)$ in $T_2$ contains
+\texttt{location} and \texttt{attr\_type},
+suggesting that they are close
+in terms of location and both host
+tourists with common interests.
+\end{example}
+
+
+\vspace{-.5ex}
+\stitle{Cost model}. Given a set of {\em interested nodes} $V_I\subseteq V$,
+one wants to to
+find backbones that can cover
+$V_I$ with small edge cost. We identify
+a cost model for backbones.
+
+\etitle{Node interestingness}. Given a node $v\in V_I$,
+we consider a function $I$ that quantifies the interestingness $I(v)\in(0,1]$
+of $v$. In practice, $I$ can be
+specified by relevant entity search in graphs~\cite{lissandrini2018x}. For example, 
+a user may specify a term 
+``art meseum'' and identify nodes of interests as 
+the set {$V_I$ = $\{v_3, v_8,v_9,v_{10},v_{12}\}$
+with relevance scores as their
+interestingness (Fig.~\ref{fig:backboneex}).
+
+\etitle{Edge cost}. We consider a cost function $C$: $E$ $\times \A$ $\rightarrow \mathbb{R}^{+}$
+that computes a non-negative connection cost for
+an edge $e = (v, v')$ in the context of
+its affinitive attributes $F_T(e)$.
+Given a backbone edge $e\in E_T$ and its
+affinitive attributes
+$F_T(e)$, we
+define $\C(e, F_T(e))$ in the form of
+\[
+C(e, F_T(e)) = 1-
+\sum
+_{A\in F_T(e)}\frac{\ksim(F_A(v), F_A(v'))}{|F_T(e)|}
+\]
+where $\ksim(F_{A_i}(v), F_{A_i}(v'))$ \eat{$\ksim(F_{A_i}(v), F_{A_i}(v')))$}quantifies the
+closeness between the values of $v.A$ and $v'.A$
+given attributes $A$ and $A'$.
+The closeness can be
+specified by established similarity measures~\cite{augsten2013similarity},
+semantic closeness,
+or geographical distance.
+%%%%%%%%%%%%%
+The function $C$ can capture
+tuple similarity by aggregating
+attribute similarity independently.
+
+\stitle{Cost of Attribute-driven Backbone}.
+We now introduce a cost measure for backbones.
+Given a graph $G$ = $(V,E,F_A)$,
+a set of interested nodes $V_I\subseteq V$,
+measures $I$ and edge cost model $C$, the
+{\em cost} of a backbone $T$=$(V_T, E_T, F_T)$ in $G$, denoted by $\cost(T)$,
+is defined as
+\[
+\cost(T) = \sum_{e\in E_T}C(e, F_T(e)) +  \sum_{v\in V_I\setminus V_T}I(v)
+\]
+
+The cost model penalizes
+the total edge cost in $T$ (first term), as well as the
+``lost'' interestingness from the nodes in $V_I$
+that are not covered by $V_T$  (second term).
+The smaller \eat{$C(T)$} $\cost(T)$ is, the better $T$ should be.
+An optimal case for a backbone $T$ is a tree
+that contains only $V_I$ and 
+assigns a set of affinitive attributes to each edge that
+minimizes the total edge cost. 
+
+\vspace{.5ex}
+We will simply denote $\cost(T)$ as
+$C(E_T)$ + $I(\overline{V_T})$, the sum of
+total edge cost $C(E_T)$ and penalty
+$I(\overline{V_T})$.
+\eat{
+We remark that $C(E_T)$ readily
+captures the likelihood the
+tree $T$ exists given the
+selected affinity attributes, by
+setting it as %$\sum_{e\in E_T}C(e, F_T(e))$
+$\Pi_{e\in E_T}C(e, F_T(e))$.
+Our techniques apply to such models.
+}
+
+\begin{example}
+Given interested nodes $V_I$ = $\{v_1, v_4, v_5, v_7, v_{11}\}$
+in Fig.~\ref{exa-motivate}, where
+the interestingness $I(v_7)$ = $0.5$,
+and $I(v_{11})$ = $0.3$. The cost
+of $T_1$ can be computed as the sum of
+the following:
+(1) $C((v_1,v_2), \texttt{location})$
+refers to the normalized Euclidean distance between
+coordinates $v_1.\texttt{location}$ and  $v_2.\texttt{location}$,
+similarly for $C((v_i,v_{i+1}), \texttt{location})$ $(i\in[4,6])$);
+(2) $C((v_i, v_{i+1}), \texttt{gender})$ = $0$ ($i={2,3}$),
+and (3) the cost $I(\overline{V_{T_1}})$
+= $I(\{v_{11}\})$ = $0.3$.
+The cost of $T_2$ can be computed similarly.
+\eat{
+\warn{show cases of 1. same topology but different attributes give different
+similarity; 2. same attributes but different edges give different meaning.
+Give intuition. Properly compare a. community; and b. Steiner tree. link here
+in experimental study.}
+}
+\end{example}
+
+
+%\stitle{Remarks}. Attributed backbones 
+%\reviseS{In the attribute-driven backbone, each edge carries a set of affinitive attributes to suggest the possible "reason" for the connectivity. Whereas, in the traditional community  
+%detection problems, either only a set of nodes or a structure with topological constraints is returned, such as $(k,r)$-core in \cite{zhang2017engagement}. The attribute-driven backbone provides the explainability and does not require users to pose explicit topological constraints.}
+
+\vspace{-3ex}
+\subsection{Backbone Discovery Problem}
+\label{sec-problem}
+
 \vspace{-1ex}
-We start with the notions of graphs.
+\stitle{Problem statement}. Given a graph $G$
+with node set $V$,
+node interestingness measure $I$, edge cost
+model $C$, and a set of interested nodes $V_I\subseteq V$
+with a root node $r$,
+the problem of attribute-driven backbone
+detection problem (\abd) is to compute a valid attribute-driven backbone $T$ with root $r$
+and has a minimum cost \eat{$C(T)$} $\cost(T)$.
+More specifically, it solves:
+
+\setlength{\abovedisplayskip}{3pt}
+\setlength{\belowdisplayskip}{3pt}
+
+\begin{equation*}
+\label{eqn_ABD_primal}
+\begin{alignedat}{3}
+&\textrm{minimize} \quad && \sum_{e\in E}C(e,F_T(e))x_e+\sum_{U \subseteq V}I(U)z_U\\
+&\textrm{subject to} \quad &&\sum_{e \in \delta(S)}x_e + \sum_{U \supseteq S}z_U \geq 1 \quad && \forall S \subseteq V - \{r\},\\
+&\quad &&x_e,z_U \geq 0 &&\forall e \in E, U \subseteq V.
+\end{alignedat}
+\end{equation*}
+
+where the Boolean variable $x_e$ denotes whether edge ${e \in E}$ is in the backbone $T$; $I(U) = \sum_{v \subseteq U}I(v)$, $z_U$ denotes whether a node set ${U \subset V}$ not containing root $r$ is spanned by the backbone $T$, and $\delta(S)$ denotes the edges having exactly one endpoint in $S\subseteq V\setminus\{r\}$.
+
+\begin{theorem}
+\label{thm-hardness}
+The decision version of \abd problem is
+\NP-complete. It is \APX-hard as an optimization
+problem.
+\end{theorem}
+
+\begin{proofS}
+We show the following.
+(1) To see that \abd is in \NP, we provide an \NP problem that guesses a
+backbone with associated affinitive attributes, and verify its cost
+in polynomial time. The hardness can be verified by
+a reduction from minimum Steiner tree, a
+well-known \NP-hard problem.
+The hardness of approximation follows
+from an approximation
+ratio preserving reduction from
+minimum Steiner tree  which is also
+\APX-hard~\cite{approx03}.
+\end{proofS}
+
+The \APX-hardness of \abd suggests that
+no polynomial-time algorithm can approximate
+the optimal backbone for
+arbitrary approximation ratio.
+Despite the hardness, we show that
+it is within reach in practice.
+We introduce an approximation
+algorithm, and a
+faster heuristic when $C$ defined as a
+probabilistic model, in
+Sections~\ref{sec-approx} and
+~\ref{sec-em}, respectively.
+
+\stitle{\warn{online backbone discovery problem statement}}
+
 
 
 

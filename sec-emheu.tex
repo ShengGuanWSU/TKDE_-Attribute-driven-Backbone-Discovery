@@ -1,0 +1,165 @@
+
+\vspace{-1ex}
+%%%%%%%%%%%%%%%%%%% Section 8 %%%%%%%%%%%%%%%%%%%%%%%
+\section{EM-based Heuristic}
+\label{sec-em}
+
+The fixed-parameter approximation is feasible when
+the parameter
+$l$ = $\max |\A(v)\cap\A(v')|$ ($v, v'\in V$) is small,
+but can be expensive when $|\A|$ is large.
+Moreover, the closeness function may not be available
+for all the affinitive attributes. For example,
+users may only specify interested affinitive attributes
+but are not aware of a proper closeness measure for
+the attributes. We next introduce
+a faster heuristic algorithm that
+can quickly infer the backbones without requiring
+any closeness functions, and can quickly response
+to new queries with changed interested nodes.
+
+\stitle{Overview}. As no closeness functions are available for $\A$,
+\ie no semantic closeness is known among attribute values,
+the main idea is to dynamically infer the edge cost $C$
+via an {\em edge generation model} $\M$, based on a practical assumption
+that the likelihood of the existence of an edge $e$= $(v,v')$
+is determined by the node attributes $\A(v)$ and $\A(v')$
+and their values.
+Our second algorithm, denoted as~\heuabd, performs a
+once-for-all learning process to
+compute an edge generation model $\M$, characterized by
+an underlying stochastic
+network generative model~\cite{kim2011modeling}.
+Upon the specification of interested nodes $V_I$,
+\heuabd dynamically infers a backbone $T$
+with affinitive attributes and corresponding cost
+$C(\cdot)$ from $\M$, such that the likelihood
+of existence of $T$ is maximized.
+
+\vspace{.5ex}
+The algorithm ~\heuabd has two major components:
+edge generation model learning, and
+attribute inference.
+
+\stitle{Learning edge generation model}.
+We revise the multiplicative attribute graph model~\cite{kim2011modeling}
+to an edge generation model with affinitive attributes,
+which quantifies $C$ as:
+\[
+C(e, F_T(e), \M) = \prod^{|F_T(e)|}_{i=1}M_{A_i}[F_{A_i}(v)][F_{A_i}(v')]
+\]
+Here $M_i\in \M$ is an affinity matrix
+associated to an attribute $A_i\in \A$.
+For each attribute $A\in \A$ and matrix $M_A$,
+the entry $M_A[j][k]\in [0,1]$ refers
+to the probability
+that an edge $(v,v')$ exists when
+$F_A(v)$ (resp. $F_A(v')$) takes the $j$-th (resp. $k$-th) value
+in $\adom(A)$.
+
+\vspace{.5ex}
+Algorithm~\heuabd invokes a procedure~\learn to
+learn the affinity matrix $\M$.
+Specifically, the probability
+that $E$ exists given
+node attribute values can be expressed
+as
+\[
+\pr(E|\A, \M) = \prod_{(v,v')\in E}C(e, \A, \M)\prod_{(v,v')\not\in E}(1-C(e, \A, \M))
+\]
+The procedure \learn aims to identify
+$\M$ by solving $\arg\max_{\M}\pr(E|\A,\M)$.
+To this end, \learn applies a
+maximum likelihood estimation (\kw{EM})
+process to compute $\M$.
+To reduce the learning cost, we
+take a similar strategy as~\cite{kim2011modeling}
+which considers that each attribute follows
+Bernoulli distribution.
+
+\stitle{Dynamic inference}.  The procedure~\learn
+is a {\em once-for-all} process. Upon receiving nodes of interests $V_I$,
+\heuabd invokes a second procedure~\infer,
+which computes backbones by
+incorporating the inference of affinitive
+attributes to the process of clustering.
+
+Procedure~\infer follows a similar clustering
+process as in~\approxabd. It started by
+initializing $\P$, and iteratively groups
+clusters upon the verification of \isgrow and
+\ismerge. The major difference is that it applies a
+heuristic variant of the procedure~\updateAE,
+without enumerating affinitive edges for each cluster.
+More specifically,
+given a cluster $P$, it first identifies
+all the edges with one end node
+in $P$. For each edge $e$=$(v,v')$, it
+infers a set of affinitive attributes $F(e)$ directly,
+by solving
+\[ \argmax_{F(e)\subseteq\A(v)\cap\A(v')} C(e, F(e), \M)
+\]
+Given the independent likelihood of edges,
+a heuristic is to sort and select top-k
+attributes $A_i\in F(e)\subseteq\A(v)\cap\A(v')$
+with the largest values
+$M_{A_i}[F_{A_i}(v)][F_{A_i}(v')]$.
+This can be inferred at run time,
+whenever two clusters are merged.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tb!]
+\begin{center}
+{\small
+\begin{minipage}{3.36in}
+\myhrule
+\vspace{-1ex}
+%%%%%%%%%%%%%%%%%Algorithm \paragfd%%%%%%%%%%%%
+\mat{0ex}{
+{\bf Algorithm}~\heuabd\\
+\sstab {\sl Input:\/} \= graph $G$, interested nodes $V_I$.\\
+{\sl Output:\/} an attribute-driven backbone $T$.\\
+%%%%%%%%%%%%%
+\bcc \hspace{3.6ex}\= \If cost model is not specified \Then \\
+\icc\> \vspace{2ex} $\M$ := \learn(G, $\A$); \\
+\icc\> $T$ := \infer(G, $\M$, $\A$, $V_I$); \\
+\icc\> \Return $T$;
+}
+\vspace{-2ex}
+\myhrule
+\end{minipage}
+}
+\end{center}
+\vspace{-2ex}
+\caption{Algorithm~\heuabd} \label{fig:heuabd}
+\vspace{-4ex}
+\end{figure}
+
+
+The algorithm~\heuabd is illustrated in
+Fig.~\ref{fig:heuabd}.
+
+\stitle{Performance analysis}.
+It takes the procedure~\learn  $O(|A|^2|E|)$
+time to learn the affinity matrix from scratch.
+The time that infers the top-$k$ best affinitive
+attributes for each cluster
+is in $O(|A|\log|k|)$ time, and
+in total $O(|A|\log|k||E|)$ for
+all the edges. As the
+affinitive attributes and the edge costs
+are dynamically inferred,
+it takes $O(|E|\log |V| + |V|)$ time for
+\infer to simulate \GW scheme that
+computes a prize-collecting Steiner tree.
+It thus takes in total
+$O(|A|^2|E| + |A|\log|k||E| + |E|\log |V| + |V|)$
+time to compute backbones from scratch,
+and $O(|A|\log|k||E| + |E|\log |V| + |V|)$
+time given the matrix $\M$ which is learned once for all.
+
+
+
+

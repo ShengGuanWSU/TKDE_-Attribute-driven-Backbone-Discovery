@@ -1,15 +1,10 @@
+\newcommand{\imp}{\vdash_{\cal I}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Enumerate and Itemize modifications
-%\usepackage{enumitem}
-%\setlist{topsep=0pt,noitemsep} \setitemize[1]{label=$\circ$}
+\usepackage{enumitem}
+\setlist{topsep=0pt,noitemsep} \setitemize[1]{label=$\circ$}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\makeatletter
-\DeclareRobustCommand*\cal{\@fontswitch\relax\mathcal}
-\makeatother
-
-\DeclareMathOperator*{\argmax}{arg\,max}
-%\DeclareMathOperator*{\argmin}{arg\,min}
 
 \sloppy
 \newcommand{\rtable}[1]{\ensuremath{\mathsf{#1}}}
@@ -36,6 +31,8 @@
         \setlength{\topsep}{0ex}\setlength{\itemsep}{0ex}\vspace{0ex}}
         {\end{itemize}\vspace{-1ex}}
 
+\newcommand{\noteqs}[1]{{\color{red}{#1}---QS}}
+
 \newcommand{\mat}[2]{{\begin{tabbing}\hspace{#1}\=\+\kill #2\end{tabbing}}}
 \newcommand{\m}{\hspace{0.05in}}
 \newcommand{\ls}{\hspace{0.1in}}
@@ -46,10 +43,10 @@
 \newcommand{\card}[1]{\mid\! #1\!\mid}
 \newcommand{\fth}{\hfill $\Box$}
 \newcommand{\AND}{\displaystyle{\bigwedge_{i=1}^{n}}}
-%\newcommand{\U}[1]{\displaystyle{\bigcup_{#1}}}
+\newcommand{\U}[1]{\displaystyle{\bigcup_{#1}}}
 \newcommand{\Sm}[1]{\displaystyle{\sum_{#1}}}
 \newcommand{\stitle}[1]{\vspace{1.5ex}\noindent{\bf #1}}
-\newcommand{\etitle}[1]{\vspace{0.8ex}\noindent{\underline{\em #1}}}
+\newcommand{\etitle}[1]{\vspace{0.8ex}\noindent{\em #1}}
 \renewcommand{\t}{\tau}
 \newcommand{\Inh}[1]{\$#1}
 \renewcommand{\r}[1]{{\it rule}(#1)}
@@ -290,105 +287,146 @@
         }
 \newcounter{claim}
 \renewcommand{\theclaim}{\arabic{claim}}
-%\newenvironment{proof}{
-%        \vspace{1ex}
-%        {\noindent\bf Proof:}}{\eop\vspace{1ex}}
+\newenvironment{proof}{
+        \vspace{1ex}
+        {\noindent\bf Proof:}}{\eop\vspace{1ex}}
 \newenvironment{proofS}{
         \vspace{1ex}
         {\noindent\bf Proof sketch:\ }}{\eop\vspace{1ex}}
 
 \renewcommand{\texttt}[1]{{\small\textsf{#1}}}
 
-%\definecolor{gray}{rgb}{0.5,0.5,0.5}
-\newcommand{\reviseS}[1]{\textcolor{blue}{#1}}
-\newcommand{\reviseW}[1]{\textcolor{red}{#1}}
-%\newcommand{\changed}[1]{\textcolor{red}{#1}}
-%\newcommand{\removed}[1]{\textcolor{gray}{#1}}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+%\newcommand{\revise}[1]{\textcolor{black}{#1}}%blue
+\newcommand{\reviseq}[1]{\textcolor{black}{#1}}%green
+\newcommand{\changed}[1]{\textcolor{red}{#1}}
+\newcommand{\removed}[1]{\textcolor{gray}{#1}}
+\newcommand{\note}[1]{\textcolor{blue}{#1}}
 
 \newcommand{\conv}{conv}
 %\DeclareMathOperator{\conf}{conf}
 %\DeclareMathOperator{\sim}{sim}
 \newcommand{\lift}{lift}
-\newcommand{\supp}{\tt Supp}
+\newcommand{\supp}{\kw{supp}}
 \newcommand{\join}{Join}
 \newcommand{\Union}{\bigcup}
 \newcommand{\nfa} {\kw{NFA}}
-\newcommand{\ksim} {\kw{cl}}
-\newcommand{\cost} {\kw{cost}}
 
-\newcommand{\tbf}{\textbf{\color{red}{tbf}}\xspace}
+\newcommand{\tbf}{\textbf{\textcolor[rgb]{1,0,0}{TBF}}\xspace}
 
-
-\newcommand{\spmine}{\kw{Approx}-\kw{Sum}}
+\newcommand{\spmine}{\kw{approxDis}}
 \newcommand{\incsum}{\kw{incSum}}
-\newcommand{\atmine}{\kw{AT}-\kw{Sum}}
-\newcommand{\pgen}{\kw{candidateGen}}
+\newcommand{\atmine}{\kw{streamDis}}
+\newcommand{\patmine}{\kw{paraDis}}
+\newcommand{\patnmine}{\kw{paraDisn}}
+\newcommand{\pr}{\kw{PRA}}
+\newcommand{\sfe}{\kw{SFE}}
+\newcommand{\deeppath}{\kw{DeepPath}}
+
+\newcommand{\oprgen}{\kw{OpGen}}
+\newcommand{\apn}{\kw{APN}}
+\newcommand{\mbs}{\kw{MBS}}
+\newcommand{\genprune}{\kw{GenMBS}}%OpGen
+\newcommand{\genseed}{\kw{GenPicky}}%OpGen
+
+\newcommand{\pgen}{\kw{sumGen}}
 \newcommand{\inctopk}{\kw{incTopk}}
-\newcommand{\fmine}{\kw{Stream}-\kw{Sum}}
+\newcommand{\fmine}{\kw{heuDis}}
 \newcommand{\ftopk}{\kw{fastTopk}}
-\newcommand{\aff}{\kw{AFF}}
-\newcommand{\smatch}{\kw{Eval}-\kw{Sum}}
-\newcommand{\pmatch}{\kw{Cover}-\kw{Sum}}
+\newcommand{\aff}{\kw{Aff}}
+\newcommand{\smatch}{\kw{evalSum}}
 \newcommand{\spsel}{\kw{Select}-\kw{Sum}}
-\newcommand{\grami}{\kw{GraMi}}
+\newcommand{\grami}{\kw{GRAMI}}
 
-\newcommand{\smatchr}{\kw{Eval}-\kw{RND}}
-\newcommand{\smatcha}{\kw{Eval}-\kw{Sum}($\Delta$=0)\xspace}
-\newcommand{\smatchi}{\kw{Eval}-\kw{GraMi}}
-\newcommand{\smatchno}{\kw{Eval}-\kw{NO}}
 
-\newcommand{\yago}{\kw{YAGO}}
+\newcommand{\swn}{\kw{FastWhyNot}}
+\newcommand{\mwn}{\kw{MultiWhyNot}}
+\newcommand{\isown}{\kw{ExactWhyNot}}
+\newcommand{\misown}{\kw{MultiExactWhyNot}}
+\newcommand{\swniso}{\kw{IsoWhyNot}}
+\newcommand{\enuwn}{\kw{EnuWhyNot}}
+
+\newcommand{\sw}{\kw{ApproxWhy}}
+\newcommand{\msw}{\kw{MultiApproxWhy}}
+\newcommand{\misow}{\kw{MultiExactWhy}}
+\newcommand{\isow}{\kw{ExactWhy}}
+\newcommand{\enuw}{\kw{EnuWhy}}
+\newcommand{\swiso}{\kw{IsoWhy}}
+
+\newcommand{\parti}{\kw{Ptn}}
+\newcommand{\msg}{\kw{Msg}}
+\newcommand{\lscan}{\kw{Lscan}}
+\newcommand{\pncons}{\kw{PnCons}}
+\newcommand{\assign}{\kw{Assign}}
+\newcommand{\leval}{\kw{LocalEval}}
+\newcommand{\prcons}{\kw{PrCons}}
+\newcommand{\diffc}{\kw{DiffCal}}
+\newcommand{\simq}{\kw{Sim_q}}
+\newcommand{\simst}{\kw{Sim_{st}}}
+\newcommand{\simse}{\kw{Sim_{se}}}
+\newcommand{\simr}{\kw{Sim_r}}
+\newcommand{\mcs}{\kw{mcs}}
+
+\newcommand{\divsum}{\kw{sumDiv}}
+\newcommand{\eetitle}[1]{\vspace{0.8ex}\noindent{\em\underline{#1}}}
+
+\newcommand{\parpgen}{\kw{ParsumGen}}
+\newcommand{\pardivsum}{\kw{ParsumDiv}}
+
+\newcommand{\smatchr}{\kw{evalRnd}}
+\newcommand{\smatcha}{\kw{evalSum}($\Delta$=0)\xspace}
+\newcommand{\smatchi}{\kw{evalGRAMI}}
+\newcommand{\smatchno}{\kw{evalNo}}
+
+\newcommand{\yago}{\kw{Yago}}
 \newcommand{\dbpedia}{\kw{DBpedia}}
 \newcommand{\freebase}{\kw{Freebase}}
+\newcommand{\pokec}{\kw{Pokec}}
+\newcommand{\amazon}{\kw{Amazon}}
+\newcommand{\imdb}{\kw{IMDB}}
+%\newcommand{\simk}{$\preceq_d$}
+\newcommand{\diff}{\kw{diff}}
+\newcommand{\warn}[1]{{\color{red}{#1}}}
+\newcommand\addtag{\refstepcounter{equation}\tag{\theequation}}
 
-\newcommand{\warn}[1]{{\textcolor{red}{#1}}}
-\newcommand{\abd}{\kw{ABD}}
-\newcommand{\abds}{\kw{ABDs}}
-\newcommand{\approxabd}{\kw{approxABD}}
-\newcommand{\heuabd}{\kw{fastABD}}
-\newcommand{\GW}{\kw{GW}}
-\newcommand{\EM}{\kw{EM}}
-\newcommand{\APX}{\kw{APX}}
-\newcommand{\adom}{\kw{adom}}
+\newcommand{\spawn}{\kw{Spawn}}
 
-\newcommand{\G}{\mathbb{G}}
-\renewcommand{\Q}{\mathbb{Q}}
-\newcommand{\C}{\mathbb{C}}
-\newcommand{\pcst}{\kw{PCST}}
-\renewcommand{\P}{\mathbb{P}}
-\newcommand{\M}{\mathbb{M}}
-\renewcommand{\V}{\mathbb{V}}
-\renewcommand{\E}{\mathbb{E}}
+\newcommand{\lvec}{\kw{lvec}}
 
-%\newcommand{\Init}{\kw{Init}}
-\newcommand{\updateAE}{\kw{UpdateAE}} %% updateAE(\C)
-\newcommand{\isgrow}{\kw{isGrow}} %isgrow(\C)
-\newcommand{\ismerge}{\kw{isMerge}} %ismerge(e, C_v, C_v')
-\newcommand{\merge}{\kw{Merge}} %marge(C_v, C_v')
-\newcommand{\grow}{\kw{Grow}} %grow(C_v, \Q_E)
-\newcommand{\deactivate}{\kw{deactivate}}
-\newcommand{\refine}{\kw{refine}}
+\newcommand{\rms}{\kw{RMS}}
+\newcommand{\rmss}{\kw{RMSs}}
 
+\newcommand{\reduce}{\kw{Reduce}}
+\newcommand{\validate}{\kw{Validate}}
 
-\newcommand{\cesna}{\kw{CESNA}}
-\newcommand{\naive}{\abd-\kw{naive}}
-\newcommand{\kcore}{\kw{KCoreGC}}
-\newcommand{\ks}{\kw{KS}}
+\newcommand{\op}{\kw{op}}
+\newcommand{\oc}{\kw{oc}}
+\newcommand{\avg}{\kw{avg}}
+\newcommand{\cl}{\kw{cl}}
+\newcommand{\pre}{\kw{guard}}
+\newcommand{\ecl}{\kw{\hat{cl}}}
+\newcommand{\cost}{\kw{cost}}
+\newcommand{\bsm}{\kw{BSM}}
 
-\newcommand{\yelp}{\kw{Yelp}}
-\newcommand{\weibo}{\kw{Weibo}}
-\newcommand{\cita}{\kw{Citation}}
-\newcommand{\youtube}{\kw{Youtube}}
+\newcommand{\revise}[1]{{\color{black}{#1}}}
+\newcommand{\reviseOne}[1]{{\color{black}{#1}}}
+\newcommand{\reviseTwo}[1]{{\color{black}{#1}}}
+\newcommand{\reviseThree}[1]{{\color{black}{#1}}}
+\newcommand{\reviseFour}[1]{{\color{black}{#1}}}
 
-\newcommand{\learn}{\kw{learnAE}}
-\newcommand{\infer}{\kw{inferAE}}
-\newcommand{\pr}{\kw{Pr}}
+\newcommand{\RxL}{\kw{RxL}}
+\newcommand{\RmL}{\kw{RmL}}
+\newcommand{\RmE}{\kw{RmE}}
+\newcommand{\RfL}{\kw{RfL}}
+\newcommand{\AddL}{\kw{AddL}}
+\newcommand{\AddE}{\kw{AddE}}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                  My added part
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
-\newcommand{\blue}[1]{\textcolor{blue}{#1}}
-\newcommand{\ogks}{\kw{OGKs}}
-\newcommand{\poi}{\kw{POI}}
-\newcommand{\pois}{\kw{POIs}}
+\newcommand{\Match}{\kw{Match}}
+\newcommand{\eMatch}{\kw{EstMatch}}
+\newcommand{\mg}{\kw{mg}}
+\newcommand{\maxmg}{\kw{Maxmg}}
+\newcommand{\minA}{\kw{minA}}
+\newcommand{\maxA}{\kw{maxA}}
+%\newcommand{\dom}{\kw{dom}}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
