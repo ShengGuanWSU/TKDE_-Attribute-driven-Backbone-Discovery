@@ -346,3 +346,67 @@ that computes prize collecting Steiner trees
 in weighted graphs to attributed networks.
 
 \etitle{\warn{Online backbone-style literature review}}.
+
+In \cite{qian2011logn}, the authors define the online version of prize-collecting Steiner tree problem in the scenario that the undirected graph ${G= (V,E)}$ is given, with edge costs $c_e \geq 0$ for all ${e \in E}$, a root vertex ${r \in V}$, and penalties ${\pi_v}$ for all ${v \in V}$. Initially every vertex $v$ has penalty ${\pi_{v0} =0}$. At each step in time $t$, for one terminal $v$,  its penalty $\pi_{vt}$ increases from 0 to some positive value ${\pi_{vt} >0}$. We then must either connect the vertex to the root by adding edges to our current solution or pay the penalty $\pi_{vt}$ for each remaining time step of the algorithm even if it is connected to the root later on. In the latter case, we mark the terminal $v$.
+Our goal is to find a set of edges $F$ that minimizes the sum of edges costs in $F$ plus the sum of penalties for all marked terminals.
+
+The competitive ratio is O(log$n$), where ${n = |V|}$.
+
+The online algorithm also requires that once the edge is selected in the $T$, it will be not removed from the solution anymore.
+
+The competitive ratio of the algorithm compares the cost of our solution in each step with the cost of the optimal solution of the instance at that point in time.
+
+Motivation examples:
+(Design the infrastructure networks, \eg telecommunications, vertex penalty: estimate of potential loss of revenue if the customer were not to be serviced; edge cost: cost of laying the fiber on the corresponding path segment. A dynamic exploration of the covered area.)
+
+(Routing in computer networks, source ${s \in V}$ and a set of destinations ${D \subset V}$. The cost function $c$ can be a complicated function with arguments like delay of a channel, fees , and so on. Vertex penalty: estimate of potential loss of revenue if the routing failures happen and destinations were not to be serviced. A dynamic exploration of the covered area.)
+
+
+Some Testsets for PCST:
+
+(http://steinlib.zib.de/testset.php)
+
+Exact PCST Solver:
+
+(https://github.com/mluipersbeck/dapcstp)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tb!]
+%\vspace{-1ex}
+\begin{center}
+{\small
+\begin{minipage}{3.36in}
+\myhrule
+\vspace{-1ex}
+%%%%%%%%%%%%%%%%%Algorithm \paragfd%%%%%%%%%%%%
+\mat{0ex}{
+{\bf Algorithm}~\approxabd\\
+\sstab {\sl Input:\/}
+\= graph $G$=$(V,E,F_A)$, cost model $C$, interested nodes $V_I\subseteq V$.\\
+{\sl Output:\/} An online-manner attributed backbone $T_i = (V_{Ti},E_{Ti},F_{Ti})$.\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bcc \hspace{3.6ex}\= For each \{0,1\}- proper function $f_i$ that arrives \\
+\icc\> \hspace{2ex} \tbf  \\
+\icc\> \hspace{2ex} \tbf \\
+\icc\> \hspace{2ex} \tbf \\%/* 
+\icc\> \hspace{4ex} \tbf \\
+\icc\> \hspace{4ex} \tbf \\
+\> /* {\em \tbf} */\\
+\icc\> \hspace{6ex} \tbf; \\
+\>  /* \tbf */\\
+\icc\> \hspace{4ex} \tbf;  \\
+\> /* {\em \tbf } */\\
+\icc\> \hspace{2ex} \tbf;\\
+\icc\>  \tbf \\
+\icc\> \Return $T_i$;  \\
+}
+\vspace{-3ex}
+\myhrule
+\end{minipage}
+}
+\end{center}
+\vspace{-2ex}
+\caption{Algorithm~\approxabd} \label{fig:approxABD}
+\vspace{-3ex}
+\end{figure}
